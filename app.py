@@ -2,6 +2,7 @@ import streamlit as st
 import sqlite3
 import pandas as pd
 from datetime import datetime
+from streamlit_autorefresh import st_autorefresh
 
 # ---- Database Setup (Create tables if not exist) ----
 
@@ -199,7 +200,7 @@ if st.button("⚠️ Reset All Data (Clear All Logs & Tables)"):
             conn.execute("INSERT OR IGNORE INTO grids (GridID, Status, CurrentDrumID) VALUES (?, 'Available', NULL)", (grid_id,))
     conn.commit()
     st.success("All data cleared! Grids reset.")
-    st.experimental_rerun()
+    st.rerun()
 
 if page == "Dashboard (Live)":
     dashboard(conn)
