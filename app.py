@@ -57,6 +57,10 @@ create_tables()
 
 # ---- DB HELPERS ----
 
+def get_drums_by_orderno(conn, order_no):
+    return pd.read_sql_query("SELECT * FROM drums WHERE OrderNo = ?", conn, params=(order_no,))
+
+
 def get_db_connection():
     conn = sqlite3.connect('inventory.db', check_same_thread=False)
     conn.row_factory = sqlite3.Row
@@ -118,6 +122,18 @@ def get_drum_history(conn):
 
 def dashboard(conn):
     st.title("📦 Warehouse Grid Dashboard")
+
+    
+    st.subheader("🔎 Search Drum by Order Number")
+    search_order = st.text_input("Enter Order Number to search (case-sensitive)").strip()
+    if search_order:
+        result = get_drums_by_orderno(conn, search_order)
+        if not result.empty:
+            st.success(f"Found {len(result)} record(s) for Order Number: {search_order}")
+            st.dataframe(result)
+        else:
+            st.error(f"No drums found for Order Number: {search_order}")
+
     st.subheader("Grid Status (Auto-refreshes every 10 seconds)")
     grids = get_all_grids(conn)
     st.dataframe(grids)
@@ -129,6 +145,7 @@ def dashboard(conn):
     st.dataframe(drum_hist)
     st.caption("Reloads automatically in 10 seconds.")
     st_autorefresh(interval=10*1000, key="refresh_dashboard")  # 10s
+
 
 def drum_in(conn):
     st.header("🔄 Drum Placement (IN)")
