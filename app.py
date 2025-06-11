@@ -121,7 +121,7 @@ def get_drum_history(conn):
 # ---- PAGES ----
 
 def dashboard(conn):
-    st.title("📦 Warehouse Grid Dashboard")
+    st.title("📦 Drum Storage Grid Dashboard")
 
     
     st.subheader("🔎 Search Drum by Order Number")
